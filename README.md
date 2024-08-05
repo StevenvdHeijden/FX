@@ -23,15 +23,22 @@ To use this code, you need to have Python installed on your system. You can inst
 
 ## Usage
 
-  1. Prepare the Data: Download historical forex data from histdata.com and save it in a compatible format (e.g., CSV).
+1. Prepare the Data: Download historical forex data from histdata.com and save it in a compatible format (e.g., CSV).
 
-  2. Load the Data: Load your historical data into the code. Ensure that the data is formatted correctly to match the requirements of the code.
+2. Load the Data: Load your historical data into the code. Ensure that the name of the path matches the one in the code:
 
-  3. Run the Backtester: Initialize and run the backtester for each strategy.
+        def get_data(self):
+        ''' Retrieves and prepares the data.
+        '''
+            column_names = ["Date","Time","Open","High","Low","Close","Volume"]
+            folder_path = f"C:{folderpath_name}\\HISTDATA_COM_MT_{self.symbol}_M12023{self.month}\\"
+            raw = pd.read_csv(f"{folder_path}DAT_MT_{self.symbol}_M1_2023{self.month}.csv", sep=',', header=None)
+
+3. Run the Backtester: Initialize and run the backtester for each strategy.
 
 ## Example
     # Python
-    from backtester import MACDBacktester, RSIBacktester, PPBacktester,         BBBacktester, FRLBacktester, SMABacktester, EMABacktester, SOBacktester, StrategyIndicators
+    from backtester import MACDBacktester, RSIBacktester, PPBacktester, BBBacktester, FRLBacktester, SMABacktester, EMABacktester, SOBacktester, StrategyIndicators
 
     # Load your data
     data = load_your_data_function('your_data_file.csv')
