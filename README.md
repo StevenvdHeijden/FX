@@ -36,6 +36,12 @@ To use this code, you need to have Python installed on your system. You can inst
 
 3. Run the Backtester: Initialize and run the backtester for each strategy.
 
+       # When running the code, first initialize the following variables
+       months = [] # Define here the inputs of the months within the year (initialized as 2023) that you want to use for the backscoring, in format 'XX' (e.g., '01', '02', etc.).
+       currency_pair = '' # Define the currency pair, in format AAABBB (e.g., EURUSD, AUDJPY, etc.)
+       time_interval = '' # Define time interval, in format xmin or xh (e.g., 30min, 1h, etc.)
+       ptc = 0.0000xx # Define costs of trading per pip (e.g., 0.00035)
+
 ## Example
     # Python
     from backtester import MACDBacktester, RSIBacktester, PPBacktester, BBBacktester, FRLBacktester, SMABacktester, EMABacktester, SOBacktester, StrategyIndicators
