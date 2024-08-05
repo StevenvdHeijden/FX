@@ -1,0 +1,11 @@
+
+matplotlib==3.3.4
+matplotlib-inline==0.1.2
+numpy==1.26.2
+openpyxl==3.0.6
+pandas==2.1.2
+plotly==5.18.0
+pyparsing==2.4.7
+scipy==1.6.0
+seaborn==0.11.1
+yfinance==0.2.31
