@@ -44,7 +44,14 @@ To use this code, you need to have Python installed on your system. You can inst
 
 ## Example
     # Python
-    from backtester import MACDBacktester, RSIBacktester, PPBacktester, BBBacktester, FRLBacktester, SMABacktester, EMABacktester, SOBacktester, StrategyIndicators
+    from MACDBacktester import MACDBacktester as MACD
+    from RSIBacktester import RSIBacktester as RSI
+    from PPBacktester import PPBacktester as PP
+    from BBBacktester import BBBacktester as BB
+    from FRLBacktester import FRLBacktester as FRL
+    from SMABacktester import SMABacktester as SMA
+    from EMABacktester import EMABacktester as EMA
+    from SOBacktester import SOBacktester as SO
 
     # Load your data
     data = load_your_data_function('your_data_file.csv')
