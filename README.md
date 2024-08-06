@@ -9,7 +9,6 @@ This Python code is designed to test various trading strategies for the forex ma
 - **period_converter**: Allows for the user to convert the minute chart loaded from histdata, into whatever period desired
 - **MACDBacktester**: Initializes a MACD strategy and optimizes the short EMA, long EMA, and signal line.
 - **RSIBacktester**: Initializes an RSI strategy and optimizes the period, lower RSI, and upper RSI levels.
-- **PPBacktester**: Initializes a pivot point strategy and optimizes the relevant parameters .
 - **BBBacktester**: Initializes a Bollinger Bands strategy and optimizes the Bollinger Bands parameters.
 - **FRLBacktester**: Initializes a Fibonacci Retracement strategy and optimizes the Fibonacci levels.
 - **SMABacktester**: Initializes a Simple Moving Average (SMA) strategy and optimizes the short SMA and long SMA.
@@ -45,58 +44,66 @@ To use this code, you need to have Python installed on your system. You can inst
        ptc = 0.0000xx # Define costs of trading per pip (e.g., 0.00035)
 
 ## Example
-    # Python
-    from MACDBacktester import MACDBacktester as MACD
-    from RSIBacktester import RSIBacktester as RSI
-    from PPBacktester import PPBacktester as PP
-    from BBBacktester import BBBacktester as BB
-    from FRLBacktester import FRLBacktester as FRL
-    from SMABacktester import SMABacktester as SMA
-    from EMABacktester import EMABacktester as EMA
-    from SOBacktester import SOBacktester as SO
-
-    # Initialize the parameters needed to load the appropriate data
-    months = ['01','02','03','04','05','06']
-    currency_pair = 'EURUSD'
-    time_interval = '30min'
-    ptc = 0.000035
-
-    for month in months:
-        # Initialize start date and end date
-        start_date = f'2023-{month}-01'
-        end_date = f'2023-{month}-30'
-
-        # MACD class initialization
-        ema_s_macd = 12
-        ema_l_macd = 26
-        signal_mw = 9
-        macd = MACD(currency_pair, ema_s_macd, ema_l_macd, signal_mw, start_date, end_date, month, time_interval, ptc) # Initialize the MACD with set parameters
-        # Optimize parameters + save plot of results
-        print('Optimal parameters MACD: [ema_s, ema_l, signal_mw]', macd.optimize_parameters((5, 20, 1),(21,50,1),(5,20,1))) # Optimize the MACD with set ranges
-        macd.test_strategy() # Gives the returns of the optimal strategy
-        macd.plot_results() # Plots and saves the results of the optimisation
+        import pandas as pd
+        import numpy as np
+        import matplotlib.pyplot as plt
+        from MACDBacktester import MACDBacktester as MACD
+        from RSIBacktester import RSIBacktester as RSI
+        from BBBacktester import BBBacktester as BB
+        from FRLBacktester import FRLBacktester as FRL
+        from SMABacktester import SMABacktester as SMA
+        from EMABacktester import EMABacktester as EMA
+        from SOBacktester import SOBacktester as SO
         
-        # RSI class initialization
-        periods_rsi = 20
-        rsi_upper = 70
-        rsi_lower = 30
-        rsi = RSI(currency_pair, periods_rsi, rsi_lower, rsi_upper, start_date, end_date, month, time_interval, ptc) Initialize the RSI with set parameter
-        # Optimize parameters + save plot of results
-        print('Optimal parameters RSI: [periods_rsi, rsi_lower, rsi_upper]', rsi.optimize_parameters((5, 20, 1),(20,35,1),(65,80,1))) # Optimize the RSI with set ranges, higher votality
-        #print('Optimal parameters RSI: [periods_rsi, rsi_lower, rsi_upper]', rsi.optimize_parameters((20, 50, 1),(15,25,1),(75,85,1))) # Optimize the RSI with set ranges, lower votality
-        rsi.test_strategy() # Gives the returns of the optimal strategy
-        rsi.plot_results() # Plots and saves the results of the optimisation
-    
-        # SMA class initialization - V
-        sma_s = 30
-        sma_l = 80
-        sma = SMA(currency_pair, sma_s, sma_l, start_date, end_date, month, time_interval, ptc) # Initialize the SMA with set parameters
-        print('Optimal parameters SMA: [sma_s, sma_l]', sma.optimize_parameters((20, 50, 1),(51,150,1),(5,20,1))) # Optimize the SMA with set ranges
-        sma.test_strategy() # Gives the returns of the optimal strategy
-        sma.plot_results() # Plots and saves the results of the optimisation
+        plt.style.use("seaborn")
+        
+        # Define configurations
+        months = ['06','07','08','09','10','11']
+        currency_pair = 'AUDJPY'
+        time_interval = '30min'
+        ptc = 0.000035
+        
+        # Initialize an empty DataFrame to store all results
+        all_months_output = pd.DataFrame()
+        
+        def optimize_and_test_strategy(strategy_class, params, start_date, end_date, month, time_interval, ptc):
+            ''' Optimize and test a trading strategy. '''
+            strategy = strategy_class(currency_pair, *params, start_date, end_date, month, time_interval, ptc)
+            optimal_params = strategy.optimize_parameters(*params[1:])
+            strategy.test_strategy()
+            strategy.plot_results()
+            
+            return optimal_params, strategy.results
+        
+        for month in months:
+            start_date = f'2023-{month}-01'
+            end_date = f'2023-{month}-30'
+        
+            # MACD
+            macd_params = (12, 26, 9)
+            macd_opt_params, macd_results = optimize_and_test_strategy(MACD, (12, 26, 9, start_date, end_date, month, time_interval, ptc), start_date, end_date, month, time_interval, ptc)
+            print('Optimal parameters MACD:', macd_opt_params)
+        
+            # RSI
+            rsi_params = (20, 30, 70)
+            rsi_opt_params, rsi_results = optimize_and_test_strategy(RSI, (20, 30, 70, start_date, end_date, month, time_interval, ptc), start_date, end_date, month, time_interval, ptc)
+            print('Optimal parameters RSI:', rsi_opt_params)
+        
+            # SMA
+            sma_params = (30, 80)
+            sma_opt_params, sma_results = optimize_and_test_strategy(SMA, (30, 80, start_date, end_date, month, time_interval, ptc), start_date, end_date, month, time_interval, ptc)
+            print('Optimal parameters SMA:', sma_opt_params)
+            
+            # Similarly, initialize and run other backtesters...
+            # ...
 
-        # Similarly, initialize and run other backtesters...
-        # ...
+            # Consolidate the outputs into the final table
+            output = pd.DataFrame(table, index=[0])
+            all_months_output = pd.concat([all_months_output, output], ignore_index=True)
+            print(all_months_output)
+
+        # Save all results to a CSV file
+        all_months_output.to_csv('indicator_Backtesting_JuneNovember.csv', sep=';', decimal=',', index=False)
 
 ## Classes and Methods
 
@@ -111,12 +118,6 @@ To use this code, you need to have Python installed on your system. You can inst
 - **Methods**:
   - '__init__(data)': Initializes with historical data.
   - 'optimize_parameters()': Optimizes the period, lower RSI, and upper RSI levels.
-
-### 'PPBacktester'
-
-- **Methods**:
-  - '__init__(data)': Initializes with historical data.
-  - 'optimize_parameters(): Optimizes the pivot point parameters.
 
 ### 'BBBacktester'
 
