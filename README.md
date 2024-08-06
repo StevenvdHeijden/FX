@@ -6,14 +6,16 @@ This Python code is designed to test various trading strategies for the forex ma
 
 ## Features
 
+- **period_converter**: Allows for the user to convert the minute chart loaded from histdata, into whatever period desired
 - **MACDBacktester**: Initializes a MACD strategy and optimizes the short EMA, long EMA, and signal line.
 - **RSIBacktester**: Initializes an RSI strategy and optimizes the period, lower RSI, and upper RSI levels.
-- **PPBacktester**: Initializes a pivot point strategy and optimizes the relevant parameters.
+- **PPBacktester**: Initializes a pivot point strategy and optimizes the relevant parameters .
 - **BBBacktester**: Initializes a Bollinger Bands strategy and optimizes the Bollinger Bands parameters.
 - **FRLBacktester**: Initializes a Fibonacci Retracement strategy and optimizes the Fibonacci levels.
-- **SMABacktester**: Initializes a Simple Moving Average (SMA) strategy and optimizes the SMA period.
-- **EMABacktester**: Initializes an Exponential Moving Average (EMA) strategy and optimizes the EMA period.
+- **SMABacktester**: Initializes a Simple Moving Average (SMA) strategy and optimizes the short SMA and long SMA.
+- **EMABacktester**: Initializes an Exponential Moving Average (EMA) strategy and optimizes the short EMA and long EMA.
 - **SOBacktester**: Initializes a Stochastic Oscillator strategy and optimizes the stochastic parameters.
+- **strategy_indicators**: Assigns limits to the training sets and gathers the optimal parameters based on return for each of abovementioned indicators/strategies.
 
 ## Installation
 
@@ -34,10 +36,10 @@ To use this code, you need to have Python installed on your system. You can inst
             folder_path = f"C:{folderpath_name}\\HISTDATA_COM_MT_{self.symbol}_M12023{self.month}\\"
             raw = pd.read_csv(f"{folder_path}DAT_MT_{self.symbol}_M1_2023{self.month}.csv", sep=',', header=None)
 
-3. Run the Backtester: Initialize and run the backtester for each strategy.
+3. Run the Backtester: Initialize and run the backtester for each strategy, this can be done by running **strategy_indicators.py**.
 
        # When running the code, first initialize the following variables
-       months = [] # Define here the inputs of the months within the year (initialized as 2023) that you want to use for the backscoring, in format 'XX' (e.g., '01', '02', etc.).
+       months = [] # Define here the inputs of the months within the year (initialized as 2023) that you want to use for the backscoring, in format 'XX' (e.g., ['01,'02','03'] for January, February, March).
        currency_pair = '' # Define the currency pair, in format AAABBB (e.g., EURUSD, AUDJPY, etc.)
        time_interval = '' # Define time interval, in format xmin or xh (e.g., 30min, 1h, etc.)
        ptc = 0.0000xx # Define costs of trading per pip (e.g., 0.00035)
@@ -53,8 +55,11 @@ To use this code, you need to have Python installed on your system. You can inst
     from EMABacktester import EMABacktester as EMA
     from SOBacktester import SOBacktester as SO
 
-    # Load your data
-    data = load_your_data_function('your_data_file.csv')
+    # Initialize the parameters needed to load the appropriate data
+    months = ['01','02','03','04','05','06']
+    currency_pair = 'EURUSD'
+    time_interval = '30min'
+    ptc = 0.000035
 
     # Initialize and run the MACD backtester
     macd_tester = MACDBacktester(data)
