@@ -61,23 +61,42 @@ To use this code, you need to have Python installed on your system. You can inst
     time_interval = '30min'
     ptc = 0.000035
 
-    # Initialize and run the MACD backtester
-    macd_tester = MACDBacktester(data)
-    macd_tester.optimize_parameters()
+    for month in months:
+        # Initialize start date and end date
+        start_date = f'2023-{month}-01'
+        end_date = f'2023-{month}-30'
 
-    # Initialize and run the RSI backtester
-    rsi_tester = RSIBacktester(data)
-    rsi_tester.optimize_parameters()
+        # MACD class initialization
+        ema_s_macd = 12
+        ema_l_macd = 26
+        signal_mw = 9
+        macd = MACD(currency_pair, ema_s_macd, ema_l_macd, signal_mw, start_date, end_date, month, time_interval, ptc) # Initialize the MACD with set parameters
+        # Optimize parameters + save plot of results
+        print('Optimal parameters MACD: [ema_s, ema_l, signal_mw]', macd.optimize_parameters((5, 20, 1),(21,50,1),(5,20,1))) # Optimize the MACD with set ranges
+        macd.test_strategy() # Gives the returns of the optimal strategy
+        macd.plot_results() # Plots and saves the results of the optimisation
+        
+        # RSI class initialization
+        periods_rsi = 20
+        rsi_upper = 70
+        rsi_lower = 30
+        rsi = RSI(currency_pair, periods_rsi, rsi_lower, rsi_upper, start_date, end_date, month, time_interval, ptc) Initialize the RSI with set parameter
+        # Optimize parameters + save plot of results
+        print('Optimal parameters RSI: [periods_rsi, rsi_lower, rsi_upper]', rsi.optimize_parameters((5, 20, 1),(20,35,1),(65,80,1))) # Optimize the RSI with set ranges, higher votality
+        #print('Optimal parameters RSI: [periods_rsi, rsi_lower, rsi_upper]', rsi.optimize_parameters((20, 50, 1),(15,25,1),(75,85,1))) # Optimize the RSI with set ranges, lower votality
+        rsi.test_strategy() # Gives the returns of the optimal strategy
+        rsi.plot_results() # Plots and saves the results of the optimisation
+    
+        # SMA class initialization - V
+        sma_s = 30
+        sma_l = 80
+        sma = SMA(currency_pair, sma_s, sma_l, start_date, end_date, month, time_interval, ptc) # Initialize the SMA with set parameters
+        print('Optimal parameters SMA: [sma_s, sma_l]', sma.optimize_parameters((20, 50, 1),(51,150,1),(5,20,1))) # Optimize the SMA with set ranges
+        sma.test_strategy() # Gives the returns of the optimal strategy
+        sma.plot_results() # Plots and saves the results of the optimisation
 
-    # Similarly, initialize and run other backtesters...
-    # ...
-
-    # Combine strategies and determine optimal weights
-    strategy_indicators = StrategyIndicators([macd_tester, rsi_tester, ...])
-    optimal_strategy = strategy_indicators.determine_optimal_strategy()
-
-    # Run the combined strategy
-    optimal_strategy.run_backtest()
+        # Similarly, initialize and run other backtesters...
+        # ...
 
 ## Classes and Methods
 
@@ -115,26 +134,19 @@ To use this code, you need to have Python installed on your system. You can inst
 
 - **Methods**:
   - '__init__(data)': Initializes with historical data.
-  - 'optimize_parameters()': Optimizes the SMA period.
+  - 'optimize_parameters()': Optimizes the SMA short and SMA long.
 
 ### EMABacktester
 
 - **Methods**:
   - '__init__(data)': Initializes with historical data.
-  - 'optimize_parameters()': Optimizes the EMA period.
+  - 'optimize_parameters()': Optimizes the EMA short and EMA long.
 
 ### SOBacktester
 
 - **Methods**:
   - __init__(data): Initializes with historical data.
   - optimize_parameters(): Optimizes the stochastic parameters.
-
-### StrategyIndicators
-
-- **Methods**:
-  - __init__(strategies): Initializes with a list of strategy instances.
-  - determine_optimal_strategy(): Combines strategies and determines the optimal weights.
-  - run_backtest(): Runs the backtest with the combined strategy.
 
 ## License
 
