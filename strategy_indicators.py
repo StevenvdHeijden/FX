@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from MACDBacktester import MACDBacktester as MACD
 from RSIBacktester import RSIBacktester as RSI
-from PPBacktester import PPBacktester as PP
 from BBBacktester import BBBacktester as BB
 from FRLBacktester import FRLBacktester as FRL
 from SMABacktester import SMABacktester as SMA
